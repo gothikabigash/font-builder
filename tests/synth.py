@@ -2,7 +2,16 @@
 import numpy as np, cv2
 from PIL import Image, ImageDraw, ImageFont
 
-FONT = '/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf'
+import os
+def _find_font():
+    for p in ('/usr/share/fonts/truetype/dejavu/DejaVuSans-Bold.ttf',
+              os.path.join(os.environ.get('WINDIR', r'C:\Windows'), 'Fonts', 'arialbd.ttf'),
+              os.path.join(os.environ.get('WINDIR', r'C:\Windows'), 'Fonts', 'segoeuib.ttf'),
+              '/Library/Fonts/Arial Bold.ttf', '/System/Library/Fonts/Supplemental/Arial Bold.ttf'):
+        if os.path.exists(p):
+            return p
+    raise SystemExit('no bold system font found for the self-test')
+FONT = _find_font()
 
 def degrade(gray, angle=0.0, persp=False, seed=0, noise=6, shade=True):
     rng = np.random.default_rng(seed)
